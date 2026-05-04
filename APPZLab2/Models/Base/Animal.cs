@@ -135,7 +135,7 @@ namespace AnimalSimulation.Models.Base
 
             if (previousHappiness != IsHappy)
             {
-                Notify(IsHappy ? "Статус щастя змінено: Щаслива :)" : "Статус щастя змінено: Нещасна (потребує прибирання)");
+                Notify(IsHappy ? "Статус щастя змінено: Щаслива" : "Статус щастя змінено: Нещасна (потребує прибирання)");
             }
         }
 

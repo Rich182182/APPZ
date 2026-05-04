@@ -6,6 +6,7 @@ using AnimalSimulation.Models.Actors;
 using AnimalSimulation.Models.Animals;
 using AnimalSimulation.Models.Base;
 using AnimalSimulation.Events;
+using AnimalSimulation.Factories;
 
 namespace AnimalSimulation
 {
@@ -16,17 +17,7 @@ namespace AnimalSimulation
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Owner owner = new Owner();
-            List<Animal> animals = new List<Animal>
-            {
-                new Dog("Бровко"),
-                new Canary("Кеша"),
-                new Lizard("Гекон")
-            };
-
-            foreach (var animal in animals)
-            {
-                animal.OnNotified += Animal_OnNotified;
-            }
+            List<Animal> animals = new List<Animal>();
 
             bool isRunning = true;
 
@@ -37,6 +28,7 @@ namespace AnimalSimulation
                 Console.WriteLine("2. Взаємодіяти з твариною");
                 Console.WriteLine("3. Пропустити час для всіх (1 год)");
                 Console.WriteLine("4. Пропустити час для всіх (8 год)");
+                Console.WriteLine("5. Створити нову тварину");
                 Console.WriteLine("0. Вихід");
                 Console.Write("Вибір: ");
 
@@ -57,6 +49,9 @@ namespace AnimalSimulation
                     case "4":
                         PassTimeGlobal(animals, 8);
                         break;
+                    case "5":
+                        CreateNewAnimal(animals);
+                        break;
                     case "0":
                         isRunning = false;
                         break;
@@ -64,6 +59,26 @@ namespace AnimalSimulation
                         Console.WriteLine("Невідома команда.");
                         break;
                 }
+            }
+        }
+
+        static void CreateNewAnimal(List<Animal> animals)
+        {
+            Console.Write("Введіть тип (собака, канарка, ящірка): ");
+            string type = Console.ReadLine();
+            Console.Write("Введіть ім'я: ");
+            string name = Console.ReadLine();
+
+            try
+            {
+                Animal newAnimal = AnimalFactory.CreateAnimal(type, name);
+                newAnimal.OnNotified += Animal_OnNotified;
+                animals.Add(newAnimal);
+                Console.WriteLine($"[Система]: Тварина '{name}' успішно створена.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"[Помилка]: {ex.Message}");
             }
         }
 
@@ -147,7 +162,7 @@ namespace AnimalSimulation
                         }
                         else if (selected.CurrentLocation == Location.PetStore)
                         {
-                            Console.WriteLine("Помилка: Зоомагазин не може випустити тварину на волю. Тільки хазяїн може це зробити.");
+                            Console.WriteLine("Помилка: Зоомагазин не може випустити тварину на волю. Тільки господар може це зробити.");
                         }
                         else
                         {
